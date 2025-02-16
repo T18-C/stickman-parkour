@@ -12,7 +12,6 @@ const LEVELS = [
     }
 ];
 
-// Level generation function
 function generateLevels() {
     for (let i = 1; i < 25; i++) {
         LEVELS.push(generateLevel(i));
@@ -32,16 +31,16 @@ function generateLevel(difficulty) {
     let lastX = 100;
     let lastY = 450;
 
-    // Calculate max jump distance based on player physics
-    const maxJumpHeight = 150;  // Player can jump this high
-    const maxJumpDistance = 180; // Player can jump this far
+    // Make jumps easier for early levels
+    const jumpDistance = difficulty < 5 ? 100 : 120;  // Shorter jumps in early levels
+    const heightDiff = difficulty < 5 ? 60 : 80;     // Smaller height differences in early levels
 
     // Create a path of platforms
     for (let i = 0; i < 5; i++) {
         const platform = {
-            x: lastX + 120,  // Fixed distance that's always reachable
-            y: lastY - 80,   // Fixed height difference that's always reachable
-            width: 120,      // Wider platforms
+            x: lastX + jumpDistance,
+            y: lastY - heightDiff,
+            width: 130,      // Wider platforms for easier landing
             height: 20
         };
 
@@ -49,7 +48,7 @@ function generateLevel(difficulty) {
         if (platform.x + platform.width > 750) {
             lastX = 100;
             platform.x = lastX;
-            lastY = lastY - 100;  // Go up by a reachable amount
+            lastY = lastY - heightDiff;
             platform.y = lastY;
         }
 
@@ -62,10 +61,10 @@ function generateLevel(difficulty) {
     const lastPlatform = level.platforms[level.platforms.length - 1];
     level.goal = {
         x: lastPlatform.x + lastPlatform.width/2 - 15,
-        y: lastPlatform.y - 40,  // Always reachable
+        y: lastPlatform.y - 40,
         width: 30,
         height: 30
     };
 
     return level;
-} 
+}
